@@ -12,13 +12,15 @@ public class DwellTimeControls : MonoBehaviour
     public GameObject circle;
     public Ray ray;
     public RaycastHit hit;
+    public float dwellTime;
+    public float dwellLimit; 
 
-    // Start is called before the first frame update
     void Start()
     {
         rayTransform = Camera.main.transform;
-
-        circle = GameObject.FindGameObjectWithTag("circle"); 
+        circle = GameObject.FindGameObjectWithTag("DwellTimePort");
+        dwellTime = 0f;
+        dwellLimit = 2.0f;
     }
 
     // Update is called once per frame
@@ -27,26 +29,24 @@ public class DwellTimeControls : MonoBehaviour
         int layerMask = 1 << 8;
         layerMask = ~layerMask;
 
+        //These two bools need to be imported by the OVRInputModule script in the GetGazeButtonState
         pressed = OVRInput.GetDown(joyPadClickButton);
         released = OVRInput.GetUp(joyPadClickButton);
 
-        if (Physics.Raycast(rayTransform.position, rayTransform.forward, out hit, Mathf.Infinity, layerMask))
+        dwellTime += Time.deltaTime;
+
+        circle.transform.gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+        if (dwellTime > dwellLimit)
         {
-            Debug.Log(hit); 
-            circle.transform.gameObject.GetComponent<SpriteRenderer>().color = Color.red;
-            Debug.Log("Did Hit");
+            circle.transform.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
+            dwellTime = 0f;
         }
 
-        if (pressed && released) {
-            circle.transform.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
-        }
+        //if (Physics.Raycast(rayTransform.position, rayTransform.forward, out hit, Mathf.Infinity, layerMask))
+        //{
+        //    //Filer through hits here by using tags labeled ui so we only begin a countdown when hitting ui elements 
+        //    circle.transform.gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+        //}
 
-        if (pressed) {
-            circle.transform.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
-        }
-
-        if (released) {
-            circle.transform.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
-        }
     }
 }

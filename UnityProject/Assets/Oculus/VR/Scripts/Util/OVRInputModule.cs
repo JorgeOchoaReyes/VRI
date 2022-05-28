@@ -12,12 +12,16 @@ permissions and limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+
 
 namespace UnityEngine.EventSystems
 {
     /// <summary>
     /// VR extension of PointerInputModule which supports gaze and controller pointing.
     /// </summary>
+    /// 
+  
     public class OVRInputModule : PointerInputModule
     {
         [Tooltip("Object which points with Z axis. E.g. CentreEyeAnchor from OVRCameraRig")]
@@ -30,6 +34,9 @@ namespace UnityEngine.EventSystems
 
         [Tooltip("Keyboard button to act as gaze click")]
         public KeyCode gazeClickKey = KeyCode.Space;
+
+        [Tooltip("Custom dwell time state.")]
+        public bool dwellControllState;
 
         [Header("Physics")]
         [Tooltip("Perform an sphere cast to determine correct depth for gaze pointer")]
@@ -883,7 +890,15 @@ namespace UnityEngine.EventSystems
 			var released = OVRInput.GetUp(joyPadClickButton);
 #endif
 
-			if (pressed && released)
+            dwellControllState =
+                GameObject.FindGameObjectWithTag("DwellTimePort").transform.gameObject.GetComponent<SpriteRenderer>().color == Color.green ? true : false; 
+       
+            if(dwellControllState)
+            {
+                return PointerEventData.FramePressState.PressedAndReleased;
+            }
+
+            if (pressed && released)
                 return PointerEventData.FramePressState.PressedAndReleased;
             if (pressed)
                 return PointerEventData.FramePressState.Pressed;
