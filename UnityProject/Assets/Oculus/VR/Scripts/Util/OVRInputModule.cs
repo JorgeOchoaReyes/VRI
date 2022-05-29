@@ -891,12 +891,8 @@ namespace UnityEngine.EventSystems
 #endif
 
             dwellControllState =
-                GameObject.FindGameObjectWithTag("DwellTimePort").transform.gameObject.GetComponent<SpriteRenderer>().color == Color.green ? true : false; 
-       
-            if(dwellControllState)
-            {
-                return PointerEventData.FramePressState.PressedAndReleased;
-            }
+                GameObject.FindGameObjectWithTag("DwellTimePort").transform.gameObject.GetComponent<SpriteRenderer>().color == Color.green ? true : false;
+
 
             if (pressed && released)
                 return PointerEventData.FramePressState.PressedAndReleased;
@@ -904,6 +900,10 @@ namespace UnityEngine.EventSystems
                 return PointerEventData.FramePressState.Pressed;
             if (released)
                 return PointerEventData.FramePressState.Released;
+            if (dwellControllState)
+            {
+                return PointerEventData.FramePressState.PressedAndReleased;
+            }
             return PointerEventData.FramePressState.NotChanged;
         }
 
