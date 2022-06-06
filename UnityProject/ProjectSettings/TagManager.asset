@@ -6,6 +6,7 @@ TagManager:
   tags:
   - circle
   - DwellTimePort
+  - VRI
   layers:
   - Default
   - TransparentFX
